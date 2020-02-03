@@ -30,17 +30,25 @@ namespace DatingApp.API.Controllers
         {
             //validate request
 
-            if (await _repo.UserExists(userForRegisterDto.Username))
-                return BadRequest("Username already exists");
-
-            var userToCreate = new User()
+            try
             {
-                Username = userForRegisterDto.Username
-            };
+                
+                if (await _repo.UserExists(userForRegisterDto.Username))
+                    return BadRequest("Username already exists");
 
-            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
+                var userToCreate = new User()
+                {
+                    Username = userForRegisterDto.Username
+                };
 
-            return StatusCode(201);
+                var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
+
+                return StatusCode(201);
+            }
+            catch(Exception ex)
+            {
+                throw;
+            }
 
 
         }
