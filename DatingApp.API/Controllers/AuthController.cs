@@ -29,10 +29,8 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
             //validate request
+            //throw new Exception("Automatic Error");
 
-            try
-            {
-                
                 if (await _repo.UserExists(userForRegisterDto.Username))
                     return BadRequest("Username already exists");
 
@@ -44,12 +42,7 @@ namespace DatingApp.API.Controllers
                 var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
 
                 return StatusCode(201);
-            }
-            catch(Exception ex)
-            {
-                throw;
-            }
-
+            
 
         }
 
