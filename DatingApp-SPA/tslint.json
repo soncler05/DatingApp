@@ -1,4 +1,5 @@
 {
+  "no-string-literal": "false",
   "extends": "tslint:recommended",
   "rules": {
     "array-type": false,
