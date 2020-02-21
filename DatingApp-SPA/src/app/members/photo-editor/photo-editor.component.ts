@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Photo } from 'src/app/_models/photo';
 import { FileUploader } from 'ng2-file-upload';
 import { environment } from '../../../environments/environment';
@@ -13,6 +13,7 @@ import { UserService } from 'src/app/_services/user.service';
 })
 export class PhotoEditorComponent implements OnInit {
   @Input() photos: Photo[];
+  @Output() getMemberPhotoChange = new EventEmitter<string>();
   baseUrl = environment.apiUrl;
 
   uploader: FileUploader;
@@ -56,30 +57,35 @@ export class PhotoEditorComponent implements OnInit {
 
   }
 
-  setPhotoToMain(id: number): void {
-    this.userService.setUserPhotoToMain(id, this.authService.decodedToken.nameid).subscribe( () => {
-      this.setPhotoToMainClient(id);
+  setPhotoToMain(photo: Photo): void {
+    this.userService.setUserPhotoToMain(photo.id, this.authService.decodedToken.nameid).subscribe( () => {
+      this.setPhotoToMainClient(photo);
       this.alertify.success('The main photo has been changed successfully!!!');
     }, error => {
       this.alertify.error(error);
     });
   }
 
-  private setPhotoToMainClient(id: number) {
-    let i = 0;
-    this.photos.forEach(element => {
-      if (element.isMain) {
-        element.isMain = false;
-        i++;
-      }
+  private setPhotoToMainClient(photo: Photo) {
+    const currentPhoto = this.photos.filter(p => p.isMain === true)[0];
+    currentPhoto.isMain = false;
+    photo.isMain = true;
+    this.getMemberPhotoChange.emit(photo.url);
+    // this.getMemberPhotoChange.emit(photo.url);
+    // let i = 0;
+    // this.photos.forEach(element => {
+    //   if (element.isMain) {
+    //     element.isMain = false;
+    //     i++;
+    //   }
 
-      if (element.id === id) {
-        element.isMain = true;
-        i++;
-      }
-      if (i === 2) { return; }
+    //   if (element.id === id) {
+    //     element.isMain = true;
+    //     i++;
+    //   }
+    //   if (i === 2) { return; }
 
-    });
+    // });
   }
 
 }
