@@ -27,4 +27,7 @@ export class UserService {
       return this.http.post(this.baserUrl + userId + '/photos/' + id + '/SetMain', null);
   }
 
+  deletePhoto(userId: number, id: number ) {
+    return this.http.delete(this.baserUrl + userId + '/photos/' + id);
+  }
 }

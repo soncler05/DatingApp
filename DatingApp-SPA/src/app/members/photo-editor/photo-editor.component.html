@@ -6,14 +6,17 @@
       (click)="setPhotoToMain(photo)" [disabled]="photo.isMain">
       Main
     </button>
-      <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
+      <button type="button" class="btn btn-sm btn-danger"
+      (click)="deletePhoto(photo.id)"
+      [disabled]="photo.isMain"
+      ><i class="fa fa-trash-o"></i></button>
     </div>
   </div>
 </div>
 
 <div class="row mt-3">
  
-  <div class="col-md-3">
+  <div class="col-md-3 mr-2">
       <h3>Add Photos</h3>
 
       <div ng2FileDrop

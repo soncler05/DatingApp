@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from 'src/app/_services/auth.service';
 import { AlertifyService } from 'src/app/_services/AlertifyService.service';
 import { UserService } from 'src/app/_services/user.service';
+import { error } from 'protractor';
 
 @Component({
   selector: 'app-photo-editor',
@@ -71,21 +72,18 @@ export class PhotoEditorComponent implements OnInit {
     currentPhoto.isMain = false;
     photo.isMain = true;
     this.getMemberPhotoChange.emit(photo.url);
-    // this.getMemberPhotoChange.emit(photo.url);
-    // let i = 0;
-    // this.photos.forEach(element => {
-    //   if (element.isMain) {
-    //     element.isMain = false;
-    //     i++;
-    //   }
+    this.authService.changeMemberPhoto(photo.url);
+    this.authService.currentUser.photoUrl = photo.url;
+    localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
+  }
 
-    //   if (element.id === id) {
-    //     element.isMain = true;
-    //     i++;
-    //   }
-    //   if (i === 2) { return; }
-
-    // });
+  deletePhoto(id: number) {
+    this.alertify.confirm('Are you sure you want to delete this photo?', () => {
+      this.userService.deletePhoto(this.authService.decodedToken.nameid, id).subscribe(() => {
+        this.photos.splice(this.photos.findIndex(p => p.id === id), 1);
+        this.alertify.success('Photo has been deleted');
+      }, error => { this.alertify.error(error); });
+    });
   }
 
 }

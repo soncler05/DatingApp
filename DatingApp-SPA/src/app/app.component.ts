@@ -11,7 +11,7 @@ import { User } from './_models/user';
 export class AppComponent {
   jwtHelper = new JwtHelperService();
 
-  constructor(private authService: AuthService){}
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
     const token = localStorage.getItem('token');
@@ -21,6 +21,7 @@ export class AppComponent {
     }
     if (user) {
       this.authService.currentUser = user;
+      this.authService.changeMemberPhoto(user.photoUrl);
     }
   }
 }
